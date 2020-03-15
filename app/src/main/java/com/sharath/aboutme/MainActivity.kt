@@ -6,30 +6,34 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import android.view.inputmethod.InputMethodManager
-import android.widget.Button
-import android.widget.EditText
-import android.widget.TextView
+import androidx.databinding.DataBindingUtil
+import com.sharath.aboutme.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
 
+    private lateinit var binding: ActivityMainBinding
+
+    private var myName: MyName = MyName("Sharath")
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        //setContentView(R.layout.activity_main)
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
+        binding.myName = myName
 
-        val doneButton: Button = findViewById(R.id.done_button)
-        doneButton.setOnClickListener {
+        binding.doneButton.setOnClickListener {
             addNickName(it)
         }
     }
 
     private fun addNickName(view: View) {
-        val nicknameEdit: EditText = findViewById(R.id.nickname_edit)
-        val nicknameText: TextView = findViewById(R.id.nickname_text)
-
-        nicknameText.text = nicknameEdit.text
-        nicknameEdit.visibility = View.GONE
-        view.visibility = View.GONE
-        nicknameText.visibility = View.VISIBLE
+        binding.apply {
+            myName?.nickName = nicknameEdit.text.toString()
+            invalidateAll()
+            nicknameEdit.visibility = View.GONE
+            doneButton.visibility = View.GONE
+            nicknameText.visibility = View.VISIBLE
+        }
 
         // Hide the keyboard
         val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
